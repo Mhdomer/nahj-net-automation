@@ -1,0 +1,13 @@
+# Owner: Omar
+---
+- name: Run all playbooks
+  import_playbook: net_identity.yml
+
+- name: Run network routing playbook
+  import_playbook: net_routing.yml
+
+- name: Run Linux facts playbook
+  import_playbook: linux_facts.yml
+
+- name: Run Linux activity playbook
+  import_playbook: linux_activity.yml

@@ -1,0 +1,20 @@
+# Owner: Omar
+# CI pipeline — runs ansible-lint on every PR
+name: ansible-lint
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint@v24
+        with:
+          path: playbooks/
