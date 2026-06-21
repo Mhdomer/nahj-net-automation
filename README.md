@@ -2,7 +2,6 @@
 
 ![nahj-net-automation banner](doc/assets/banner.jpg)
 
-[![ansible-lint](https://github.com/Mhdomer/nahj-net-automation/actions/workflows/ci.yml/badge.svg)](https://github.com/Mhdomer/nahj-net-automation/actions)
 ![Ansible](https://img.shields.io/badge/Ansible-EE0000?style=flat&logo=ansible&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
 ![GNS3](https://img.shields.io/badge/GNS3-Network%20Sim-blue?style=flat)
