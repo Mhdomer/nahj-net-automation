@@ -53,7 +53,7 @@ This phase is about getting everyone aligned and the repo ready before any code 
 
 Each member works independently on their own branch and file. No waiting on others.
 
-### Member 2 — `feature/net-identity`
+### Moqbel — `feature/net-identity`
 - [ ] Write `playbooks/net_identity.yml`
 - [ ] Task: Configure IP address on router interface
 - [ ] Task: Create local user account on router
@@ -62,7 +62,7 @@ Each member works independently on their own branch and file. No waiting on othe
 - [ ] Commit at least 3 times across different days
 - [ ] Open Pull Request to `main`
 
-### Member 3 — `feature/net-routing`
+### Ali — `feature/net-routing`
 - [ ] Write `playbooks/net_routing.yml`
 - [ ] Task: Add interface description
 - [ ] Task: Add static route
@@ -71,7 +71,7 @@ Each member works independently on their own branch and file. No waiting on othe
 - [ ] Commit at least 3 times across different days
 - [ ] Open Pull Request to `main`
 
-### Member 4 — `feature/linux-facts`
+### Knan — `feature/linux-facts`
 - [ ] Write `playbooks/linux_facts.yml`
 - [ ] Task: Collect hostname
 - [ ] Task: Collect current date and time
@@ -82,7 +82,7 @@ Each member works independently on their own branch and file. No waiting on othe
 - [ ] Commit at least 3 times across different days
 - [ ] Open Pull Request to `main`
 
-### Member 5 — `feature/linux-activity`
+### Ahmed — `feature/linux-activity`
 - [ ] Write `playbooks/linux_activity.yml`
 - [ ] Task: Collect logged-in users
 - [ ] Task: Collect top 5 processes by CPU usage
@@ -92,7 +92,7 @@ Each member works independently on their own branch and file. No waiting on othe
 - [ ] Commit at least 3 times across different days
 - [ ] Open Pull Request to `main`
 
-### Member 1 (Leader) — `feature/setup`
+### Omar (Leader) — `feature/setup`
 - [ ] Write `docker/Dockerfile` — Ansible control node with `cisco.ios` collection
 - [ ] Write `docker-compose.yml`
 - [ ] Write `inventory/hosts.yml` — targets GNS3 router + Linux host (no plain-text passwords)

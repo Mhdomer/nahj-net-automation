@@ -105,11 +105,11 @@ We follow a **branch-based Git workflow**:
 
 | Member | Responsibility | Branch | Files |
 |--------|---------------|--------|-------|
-| Member 1 (Leader) | Docker setup, repo structure, Vault setup, CI pipeline, README | `feature/setup` | `Dockerfile`, `docker-compose.yml`, `inventory/hosts.yml`, `playbooks/site.yml`, `.github/workflows/ci.yml` |
-| Member 2 | Network config — IP address, user account, banner | `feature/net-identity` | `playbooks/net_identity.yml` |
-| Member 3 | Network config — interface description, static route, device info | `feature/net-routing` | `playbooks/net_routing.yml` |
-| Member 4 | Linux sysinfo — hostname, date/time, CPU, memory, disk | `feature/linux-facts` | `playbooks/linux_facts.yml` |
-| Member 5 | Linux sysinfo — logged-in users, top 5 processes + Jinja2 report | `feature/linux-activity` | `playbooks/linux_activity.yml`, `templates/report.j2` |
+| **Omar** (Leader) | Docker setup, repo structure, Vault setup, CI pipeline, README | `feature/setup` | `Dockerfile`, `docker-compose.yml`, `inventory/hosts.yml`, `playbooks/site.yml`, `.github/workflows/ci.yml` |
+| **Moqbel** | Network config — IP address, user account, banner | `feature/net-identity` | `playbooks/net_identity.yml` |
+| **Ali** | Network config — interface description, static route, device info | `feature/net-routing` | `playbooks/net_routing.yml` |
+| **Knan** | Linux sysinfo — hostname, date/time, CPU, memory, disk | `feature/linux-facts` | `playbooks/linux_facts.yml` |
+| **Ahmed** | Linux sysinfo — logged-in users, top 5 processes + Jinja2 report | `feature/linux-activity` | `playbooks/linux_activity.yml`, `templates/report.j2` |
 
 ---
 
