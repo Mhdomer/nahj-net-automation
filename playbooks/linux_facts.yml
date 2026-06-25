@@ -1,2 +1,9 @@
-# Owner: Knan
-# To be implemented on branch: feature/linux-facts
+# Write basic playbook structure
+---
+- name: Collect Linux system facts
+  hosts: linux_hosts
+  gather_facts: yes
+  tasks:
+    - name: Display hostname
+      debug:
+        msg: "Hostname: {{ ansible_hostname }}"
