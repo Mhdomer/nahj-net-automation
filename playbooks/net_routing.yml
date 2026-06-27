@@ -1,2 +1,18 @@
-# Owner: Ali
-# To be implemented on branch: feature/net-routing
+- name: Configure routing and retrieve device info
+  hosts: routers
+  gather_facts: no
+  vars_files:
+    - ../vars/vault.yml
+
+  tasks:
+    - name: Set description on Loopback0 (LAN1)
+      cisco.ios.ios_config:
+        lines:
+          - description Nahj LAN1 - Managed by Ansible
+        parents: interface Loopback0
+
+    - name: Set description on Loopback1 (LAN2)
+      cisco.ios.ios_config:
+        lines:
+          - description Nahj LAN2 - Managed by Ansible
+        parents: interface Loopback1
