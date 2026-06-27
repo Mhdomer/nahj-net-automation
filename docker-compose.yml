@@ -1,7 +1,6 @@
 services:
   ansible:
-    build:
-      context: ./docker
+    image: nonlouy/nahj-ansible:latest
     container_name: nahj-ansible
     volumes:
       - .:/project
