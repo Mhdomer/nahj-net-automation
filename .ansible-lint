@@ -1,0 +1,6 @@
+exclude_paths:
+  - playbooks/net_identity.yml
+  - playbooks/net_routing.yml
+  - playbooks/linux_facts.yml
+  - playbooks/linux_activity.yml
+  - playbooks/site.yml

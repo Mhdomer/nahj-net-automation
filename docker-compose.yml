@@ -1,0 +1,11 @@
+services:
+  ansible:
+    image: nonlouy/nahj-ansible:latest
+    container_name: nahj-ansible
+    volumes:
+      - .:/project
+    working_dir: /project
+    stdin_open: true
+    tty: true
+    network_mode: host
+    command: bash
