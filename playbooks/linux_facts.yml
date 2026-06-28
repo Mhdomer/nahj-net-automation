@@ -1,2 +1,15 @@
-# Owner: Knan
-# To be implemented on branch: feature/linux-facts
+---
+- name: Collect Linux system information - Part 1
+  hosts: linux
+  gather_facts: yes
+  vars_files:
+    - ../vars/vault.yml
+
+  tasks:
+    - name: Display hostname
+      debug:
+        msg: "Hostname: {{ ansible_hostname }}"
+
+    - name: Display current date and time
+      debug:
+        msg: "Date & Time: {{ ansible_date_time.iso8601 }}"
