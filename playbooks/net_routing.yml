@@ -16,3 +16,8 @@
         lines:
           - description Nahj LAN2 - Managed by Ansible
         parents: interface Loopback1
+
+    - name: Add static route from LAN1 to LAN2
+      cisco.ios.ios_config:
+        lines:
+          - ip route 192.168.20.0 255.255.255.0 192.168.10.1
