@@ -1,2 +1,21 @@
 # Owner: Moqbel
 # To be implemented on branch: feature/net-identity
+
+ name: Configure network device identity
+  hosts: routers
+  gather_facts: no
+  vars_files:
+    - ../vars/vault.yml
+
+  tasks:
+    - name: Configure IP address on Loopback0 (simulated LAN1)
+      cisco.ios.ios_config:
+        lines:
+          - ip address 192.168.10.1 255.255.255.0
+        parents: interface Loopback0
+
+ - name: Configure IP address on Loopback1 (simulated LAN2)
+      cisco.ios.ios_config:
+        lines:
+          - ip address 192.168.20.1 255.255.255.0
+        parents: interface Loopback1
