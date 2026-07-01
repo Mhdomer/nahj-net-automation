@@ -29,6 +29,14 @@ Credentials are encrypted with **Ansible Vault** — no plain-text passwords any
 
 </div>
 
+## Network Topology
+
+<div align="center">
+
+![Network Topology](doc/assets/network%20topology.png)
+
+</div>
+
 ---
 
 ## Team
