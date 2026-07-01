@@ -1,6 +1,3 @@
-# Owner: Moqbel
-# To be implemented on branch: feature/net-identity
-
  name: Configure network device identity
   hosts: routers
   gather_facts: no
