@@ -174,7 +174,6 @@ main  (protected — no direct pushes)
 1. Work on your own branch
 2. Commit regularly — at least 3 commits across different days
 3. Open a Pull Request to `main`
-4. Omar reviews and merges
 
 ---
 
