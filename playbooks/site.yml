@@ -1,13 +1,12 @@
-# Owner: Omar
 ---
-- name: Run all playbooks
+- name: Network device identity configuration
   import_playbook: net_identity.yml
 
-- name: Run network routing playbook
+- name: Network routing and device info
   import_playbook: net_routing.yml
 
-- name: Run Linux facts playbook
+- name: Linux system facts collection
   import_playbook: linux_facts.yml
 
-- name: Run Linux activity playbook
+- name: Linux activity and report generation
   import_playbook: linux_activity.yml
