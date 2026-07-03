@@ -19,3 +19,19 @@
         lines:
           - ip address 192.168.20.1 255.255.255.0
         parents: interface Loopback1
+
+- name: Create local user account
+      cisco.ios.ios_config:
+        lines:
+          - username {{ vault_router_user }} privilege 15 password {{ vault_router_password }}
+
+    - name: Set login banner (MOTD)
+      cisco.ios.ios_banner:
+        banner: motd
+        text: |
+          ******************************************
+          *   Group Nahj -- nahj-net-automation   *
+          *   Authorized access only              *
+          *   SECR3253 Network Programming        *
+          ******************************************
+        state: present
