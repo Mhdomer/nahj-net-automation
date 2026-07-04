@@ -1,6 +1,5 @@
 # Owner: Ahmed
 # To be implemented on branch: feature/linux-activity
----
 - name: Collect Linux system information - Part 2
   hosts: linux
   gather_facts: yes
