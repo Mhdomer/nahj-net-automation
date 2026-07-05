@@ -1,4 +1,4 @@
-# Owner: Ahmed Alyasin A21EC4
+# Owner: Ahmed Alyasin A21EC40
 # To be implemented on branch: feature/linux-activity
 - name: Collect Linux system information - Part 2
   hosts: linux
