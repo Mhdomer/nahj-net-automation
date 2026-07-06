@@ -1,32 +1,32 @@
-# Owner: Ahmed Alyasin A21EC4030
-# To be implemented on branch: feature/linux-activity
+---
 - name: Collect Linux system information - Part 2
   hosts: linux
-  gather_facts: yes
+  gather_facts: true
   vars_files:
     - ../vars/vault.yml
 
   tasks:
     - name: Get logged-in users
-      command: who
+      ansible.builtin.command: who
       register: logged_in_users
       changed_when: false
 
     - name: Display logged-in users
-      debug:
+      ansible.builtin.debug:
         msg: "{{ logged_in_users.stdout_lines }}"
 
     - name: Get top 5 processes by CPU usage
-      shell: ps aux --sort=-%cpu | head -6 | tail -5
+      ansible.builtin.shell: ps aux --sort=-%cpu | head -6 | tail -5
       register: top_processes
       changed_when: false
 
     - name: Display top 5 processes
-      debug:
+      ansible.builtin.debug:
         msg: "{{ top_processes.stdout_lines }}"
 
     - name: Generate system info report
-      template:
+      ansible.builtin.template:
         src: ../templates/report.j2
         dest: ./report.md
+        mode: "0644"
       delegate_to: localhost

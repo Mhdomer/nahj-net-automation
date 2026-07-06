@@ -1,7 +1,7 @@
 ---
 - name: Configure network device identity
   hosts: routers
-  gather_facts: no
+  gather_facts: false
   vars_files:
     - ../vars/vault.yml
 

@@ -1,6 +1,7 @@
+---
 - name: Configure routing and retrieve device info
   hosts: routers
-  gather_facts: no
+  gather_facts: false
   vars_files:
     - ../vars/vault.yml
 
@@ -31,5 +32,5 @@
       register: device_info
 
     - name: Display device information
-      debug:
+      ansible.builtin.debug:
         msg: "{{ device_info.stdout_lines }}"

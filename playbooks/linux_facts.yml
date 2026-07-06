@@ -1,34 +1,34 @@
 ---
 - name: Collect Linux system information - Part 1
   hosts: linux
-  gather_facts: yes
+  gather_facts: true
   vars_files:
     - ../vars/vault.yml
 
   tasks:
     - name: Display hostname
-      debug:
+      ansible.builtin.debug:
         msg: "Hostname: {{ ansible_hostname }}"
 
     - name: Display current date and time
-      debug:
+      ansible.builtin.debug:
         msg: "Date & Time: {{ ansible_date_time.iso8601 }}"
 
     - name: Display CPU information
-      debug:
+      ansible.builtin.debug:
         msg:
           - "Architecture: {{ ansible_architecture }}"
           - "Processor: {{ ansible_processor[2] | default('N/A') }}"
           - "CPU Cores: {{ ansible_processor_vcpus }}"
 
     - name: Display memory usage
-      debug:
+      ansible.builtin.debug:
         msg:
           - "Total Memory : {{ (ansible_memtotal_mb / 1024) | round(2) }} GB"
           - "Free Memory  : {{ (ansible_memfree_mb / 1024) | round(2) }} GB"
           - "Used Memory  : {{ ((ansible_memtotal_mb - ansible_memfree_mb) / 1024) | round(2) }} GB"
 
     - name: Display disk usage
-      debug:
+      ansible.builtin.debug:
         msg: "{{ item.mount }} — Total: {{ (item.size_total / 1073741824) | round(2) }} GB | Free: {{ (item.size_available / 1073741824) | round(2) }} GB"
       loop: "{{ ansible_mounts }}"
