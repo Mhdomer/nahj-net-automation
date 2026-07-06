@@ -1,2 +1,59 @@
-# Owner: Ahmed
-# To be implemented on branch: feature/linux-activity
+# Group Nahj — Linux System Report
+
+**Generated:** {{ ansible_date_time.iso8601 }}
+**Host:** {{ ansible_hostname }} ({{ ansible_default_ipv4.address | default('N/A') }})
+
+---
+
+## System Information
+
+| Field        | Value |
+|--------------|-------|
+| Hostname     | {{ ansible_hostname }} |
+| OS           | {{ ansible_distribution }} {{ ansible_distribution_version }} |
+| Kernel       | {{ ansible_kernel }} |
+| Architecture | {{ ansible_architecture }} |
+| Uptime       | {{ ansible_uptime_seconds | int // 3600 }}h {{ (ansible_uptime_seconds | int % 3600) // 60 }}m |
+
+---
+
+## CPU
+
+| Field       | Value |
+|-------------|-------|
+| Processor   | {{ ansible_processor[2] | default('N/A') }} |
+| vCPUs       | {{ ansible_processor_vcpus }} |
+
+---
+
+## Memory
+
+| Field        | Value |
+|--------------|-------|
+| Total        | {{ (ansible_memtotal_mb / 1024) | round(2) }} GB |
+| Free         | {{ (ansible_memfree_mb / 1024) | round(2) }} GB |
+| Used         | {{ ((ansible_memtotal_mb - ansible_memfree_mb) / 1024) | round(2) }} GB |
+
+---
+
+## Disk Usage
+
+{% for mount in ansible_mounts %}
+| {{ mount.mount }} | Total: {{ (mount.size_total / 1073741824) | round(2) }} GB | Free: {{ (mount.size_available / 1073741824) | round(2) }} GB |
+{% endfor %}
+
+---
+
+## Logged-in Users
+
+```
+{{ logged_in_users.stdout }}
+```
+
+---
+
+## Top 5 Processes (by CPU)
+
+```
+{{ top_processes.stdout }}
+```
