@@ -84,7 +84,7 @@ Credentials are encrypted with **Ansible Vault** — no plain-text passwords any
 
 - [Git](https://git-scm.com/downloads)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) — enable WSL2 on Windows
-- [GNS3](https://www.gns3.com/software/download) with a Cisco IOS image loaded
+- [VMware Workstation](https://www.vmware.com/products/workstation-pro.html) with a Cisco CSR1000v image loaded
 
 > Ansible runs inside the Docker container — no local install needed.
 
@@ -132,39 +132,49 @@ git clone https://github.com/Mhdomer/nahj-net-automation.git
 cd nahj-net-automation
 ```
 
-### 2. Create your branch
+### 2. Start the Linux target host
 
 ```bash
-git checkout -b feature/<your-name>
+docker run -d \
+  --name nahj-linux \
+  -e PUID=1000 -e PGID=1000 \
+  -e PASSWORD_ACCESS=true \
+  -e USER_NAME=nahj \
+  -e USER_PASSWORD=group-nahj \
+  -p 2222:2222 \
+  lscr.io/linuxserver/openssh-server
 ```
 
-### 3. Build and enter the Docker control node
+### 3. Start the Cisco router
+
+Boot your Cisco CSR1000v in VMware Workstation. Once it's up, confirm SSH is reachable on port 22. Update `ansible_host` in `inventory/hosts.yml` to match your router's IP if it differs.
+
+### 4. Enter the Ansible control node
 
 ```bash
-docker compose up -d
-docker compose exec ansible bash
+docker compose run --rm ansible bash
 ```
 
-### 4. Set up the Ansible Vault password
-
-The vault password is shared privately within the group — not stored in the repo.
+### 5. Set up the Ansible Vault password
 
 ```bash
-echo "your-vault-password" > .vault_pass
+echo "nahj" > /tmp/.vault_pass
 ```
 
-### 5. Run the full automation
+### 6. Run the full automation
 
 ```bash
-ansible-playbook playbooks/site.yml --vault-password-file .vault_pass
+ansible-playbook -i inventory/hosts.yml playbooks/site.yml --vault-password-file /tmp/.vault_pass
 ```
 
 Or run a specific playbook:
 
 ```bash
-ansible-playbook playbooks/net_identity.yml --vault-password-file .vault_pass
-ansible-playbook playbooks/linux_facts.yml --vault-password-file .vault_pass
+ansible-playbook -i inventory/hosts.yml playbooks/net_identity.yml --vault-password-file /tmp/.vault_pass
+ansible-playbook -i inventory/hosts.yml playbooks/linux_facts.yml --vault-password-file /tmp/.vault_pass
 ```
+
+The report is saved to `playbooks/report.md` after the Linux playbooks run.
 
 ---
 
@@ -194,5 +204,5 @@ Every Pull Request triggers a GitHub Actions workflow that runs `ansible-lint` o
 ## Course Info
 
 **Course:** SECR3253 Network Programming  
-**Semester:** 2025/2026-2  
-**Deadline:** 6 July 2026, 9:00 AM
+**University:** Universiti Teknologi Malaysia (UTM)  
+**Semester:** 2025/2026-2
