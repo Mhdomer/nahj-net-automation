@@ -14,7 +14,7 @@
 
 We are automating two things:
 
-1. **Network Device Configuration** — Ansible pushes configuration tasks to a Cisco IOS router running in GNS3
+1. **Network Device Configuration** — Ansible pushes configuration tasks to a Cisco CSR1000v router running in VMware Workstation
 2. **Linux System Info Collection** — Ansible gathers system details from a Linux host and generates a formatted Markdown report
 
 Credentials are encrypted with **Ansible Vault** — no plain-text passwords anywhere in this repo. A **GitHub Actions CI pipeline** runs `ansible-lint` on every Pull Request before it merges.
@@ -53,7 +53,7 @@ Credentials are encrypted with **Ansible Vault** — no plain-text passwords any
 
 ## What Gets Automated
 
-### Part 1 — Cisco IOS Router (GNS3)
+### Part 1 — Cisco CSR1000v (VMware Workstation)
 
 | Task | Playbook |
 |------|----------|
