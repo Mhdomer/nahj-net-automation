@@ -1,2 +1,4 @@
 .vault_pass
 *.retry
+CREDENTIALS.md
+playbooks/report*.md
