@@ -1,0 +1,44 @@
+---
+- name: Collect system info from LAN end devices
+  hosts: lan_devices
+  gather_facts: true
+  vars_files:
+    - ../vars/vault.yml
+
+  tasks:
+    - name: Display device identity
+      ansible.builtin.debug:
+        msg:
+          - "Device : {{ inventory_hostname }}"
+          - "Role   : {{ device_role }}"
+          - "Segment: {{ lan_segment }}"
+          - "Host   : {{ ansible_hostname }}"
+
+    - name: Display CPU info
+      ansible.builtin.debug:
+        msg:
+          - "Architecture: {{ ansible_architecture }}"
+          - "CPU Cores   : {{ ansible_processor_vcpus }}"
+
+    - name: Display memory usage
+      ansible.builtin.debug:
+        msg:
+          - "Total : {{ (ansible_memtotal_mb / 1024) | round(2) }} GB"
+          - "Free  : {{ (ansible_memfree_mb / 1024) | round(2) }} GB"
+          - "Used  : {{ ((ansible_memtotal_mb - ansible_memfree_mb) / 1024) | round(2) }} GB"
+
+    - name: Get top 3 processes
+      ansible.builtin.shell: ps aux --sort=-%cpu | head -4 | tail -3
+      register: top_procs
+      changed_when: false
+
+    - name: Display top processes
+      ansible.builtin.debug:
+        msg: "{{ top_procs.stdout_lines }}"
+
+    - name: Generate per-device report
+      ansible.builtin.template:
+        src: ../templates/device_report.j2
+        dest: ./report_{{ inventory_hostname }}.md
+        mode: "0644"
+      delegate_to: localhost

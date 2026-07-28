@@ -1,0 +1,26 @@
+# {{ device_role }} — {{ inventory_hostname }} ({{ lan_segment }})
+
+**Generated:** {{ ansible_date_time.iso8601 }}
+**Hostname:** {{ ansible_hostname }}
+**OS:** {{ ansible_distribution }} {{ ansible_distribution_version }}
+**Kernel:** {{ ansible_kernel }}
+
+---
+
+## Hardware
+
+| Field        | Value |
+|--------------|-------|
+| Architecture | {{ ansible_architecture }} |
+| vCPUs        | {{ ansible_processor_vcpus }} |
+| Total RAM    | {{ (ansible_memtotal_mb / 1024) | round(2) }} GB |
+| Free RAM     | {{ (ansible_memfree_mb / 1024) | round(2) }} GB |
+| Used RAM     | {{ ((ansible_memtotal_mb - ansible_memfree_mb) / 1024) | round(2) }} GB |
+
+---
+
+## Top Processes (by CPU)
+
+```
+{{ top_procs.stdout }}
+```

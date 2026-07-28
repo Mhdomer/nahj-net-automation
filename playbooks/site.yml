@@ -10,3 +10,6 @@
 
 - name: Linux activity and report generation
   import_playbook: linux_activity.yml
+
+- name: Collect info from LAN end devices
+  import_playbook: lan_devices.yml
