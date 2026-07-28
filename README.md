@@ -4,7 +4,8 @@
 
 ![Ansible](https://img.shields.io/badge/Ansible-EE0000?style=flat&logo=ansible&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
-![GNS3](https://img.shields.io/badge/GNS3-Network%20Sim-blue?style=flat)
+![VMware](https://img.shields.io/badge/VMware-607078?style=flat&logo=vmware&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat&logo=githubactions&logoColor=white)
 
 </div>
 
@@ -12,10 +13,11 @@
 
 ## What This Project Does
 
-We are automating two things:
+We automate the configuration and monitoring of a real multi-host network using Ansible — all from a single command inside a Docker container.
 
-1. **Network Device Configuration** — Ansible pushes configuration tasks to a Cisco CSR1000v router running in VMware Workstation
-2. **Linux System Info Collection** — Ansible gathers system details from a Linux host and generates a formatted Markdown report
+1. **Cisco CSR1000v Router** — Ansible configures 3 real GigabitEthernet interfaces, creates a user account, sets a login banner, adds interface descriptions, configures a static route, and retrieves live device info
+2. **Linux Monitoring Host** — Ansible collects hostname, date/time, CPU, memory, disk, logged-in users, and top processes, then generates a Markdown report via Jinja2
+3. **LAN End Devices** — Ansible SSHes into 4 end devices split across two LAN segments (pc1, laptop1 on LAN1 · server1, pc2 on LAN2) and generates a per-device report for each
 
 Credentials are encrypted with **Ansible Vault** — no plain-text passwords anywhere in this repo. A **GitHub Actions CI pipeline** runs `ansible-lint` on every Pull Request before it merges.
 
@@ -39,44 +41,65 @@ Credentials are encrypted with **Ansible Vault** — no plain-text passwords any
 
 ---
 
+## Network Design
+
+| Interface | Subnet | Role |
+|-----------|--------|------|
+| GigabitEthernet1 | 192.168.229.0/24 | Management — Ansible connects here |
+| GigabitEthernet2 | 192.168.10.0/24 | LAN1 — pc1, laptop1 |
+| GigabitEthernet3 | 192.168.20.0/24 | LAN2 — server1, pc2 |
+
+---
+
 ## Team
 
 | Member | Role | Branch |
 |--------|------|--------|
-| Omar *(Leader)* | Docker, repo setup, Ansible Vault, CI pipeline | `feature/setup` |
-| Moqbel | Network config — IP, user account, banner | `feature/net-identity` |
-| Ali | Network config — interface description, static route, device info | `feature/net-routing` |
+| Omar *(Leader)* | Docker, inventory, Ansible Vault, CI pipeline, site.yml | `feature/setup` |
+| Moqbel | Router config — IP addressing, user account, MOTD banner | `feature/net-identity` |
+| Ali | Router config — interface descriptions, static route, device info | `feature/net-routing` |
 | Knan | Linux sysinfo — hostname, date/time, CPU, memory, disk | `feature/linux-facts` |
-| Ahmed | Linux sysinfo — logged-in users, top 5 processes, Jinja2 report | `feature/linux-activity` |
+| Ahmed | Linux sysinfo — logged-in users, top processes, Jinja2 report | `feature/linux-activity` |
 
 ---
 
 ## What Gets Automated
 
-### Part 1 — Cisco CSR1000v (VMware Workstation)
+### Router — Cisco CSR1000v (VMware Workstation)
 
 | Task | Playbook |
 |------|----------|
-| Configure IP address on interface | `playbooks/net_identity.yml` |
-| Create local user account | `playbooks/net_identity.yml` |
-| Set login banner (MOTD) | `playbooks/net_identity.yml` |
-| Add interface description | `playbooks/net_routing.yml` |
-| Add static route | `playbooks/net_routing.yml` |
-| Retrieve device information | `playbooks/net_routing.yml` |
+| Configure IP on GigabitEthernet2 (LAN1) and GigabitEthernet3 (LAN2) | `net_identity.yml` |
+| Create local user account | `net_identity.yml` |
+| Set login banner (MOTD) | `net_identity.yml` |
+| Set interface descriptions on Gi2 and Gi3 | `net_routing.yml` |
+| Add static route (LAN2 via GigabitEthernet3) | `net_routing.yml` |
+| Retrieve show run / show version / show ip int brief | `net_routing.yml` |
 
-### Part 2 — Linux Host
+### Linux Monitoring Host
 
 | Info Collected | Playbook |
-|---------------|----------|
-| Hostname | `playbooks/linux_facts.yml` |
-| Current date and time | `playbooks/linux_facts.yml` |
-| CPU information | `playbooks/linux_facts.yml` |
-| Memory usage | `playbooks/linux_facts.yml` |
-| Disk usage | `playbooks/linux_facts.yml` |
-| Logged-in users | `playbooks/linux_activity.yml` |
-| Top 5 processes by CPU | `playbooks/linux_activity.yml` |
+|----------------|----------|
+| Hostname | `linux_facts.yml` |
+| Date and time | `linux_facts.yml` |
+| CPU architecture and core count | `linux_facts.yml` |
+| Memory usage | `linux_facts.yml` |
+| Disk usage per mount | `linux_facts.yml` |
+| Logged-in users | `linux_activity.yml` |
+| Top 5 processes by CPU | `linux_activity.yml` |
 
-> Output is saved as a formatted `report.md` via a Jinja2 template.
+> Output saved as `playbooks/report.md` via Jinja2 (`templates/report.j2`)
+
+### LAN End Devices (pc1 · laptop1 · server1 · pc2)
+
+| Info Collected | Playbook |
+|----------------|----------|
+| Device role and LAN segment | `lan_devices.yml` |
+| CPU architecture and core count | `lan_devices.yml` |
+| Memory usage | `lan_devices.yml` |
+| Top 3 processes by CPU | `lan_devices.yml` |
+
+> One report per device: `playbooks/report_pc1.md`, `report_laptop1.md`, `report_server1.md`, `report_pc2.md`
 
 ---
 
@@ -84,7 +107,7 @@ Credentials are encrypted with **Ansible Vault** — no plain-text passwords any
 
 - [Git](https://git-scm.com/downloads)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) — enable WSL2 on Windows
-- [VMware Workstation](https://www.vmware.com/products/workstation-pro.html) with a Cisco CSR1000v image loaded
+- [VMware Workstation](https://www.vmware.com/products/workstation-pro.html) with Cisco CSR1000v loaded and VMnet2/VMnet3 configured
 
 > Ansible runs inside the Docker container — no local install needed.
 
@@ -96,28 +119,36 @@ Credentials are encrypted with **Ansible Vault** — no plain-text passwords any
 nahj-net-automation/
 ├── .github/
 │   └── workflows/
-│       └── ci.yml               # ansible-lint on every PR
+│       └── ci.yml                   # ansible-lint on every PR
 ├── doc/
 │   ├── assets/
 │   │   ├── banner.jpg
-│   │   └── archet.png
+│   │   ├── archet.png               # architecture diagram
+│   │   └── network topology.png     # network topology diagram
+│   ├── sam/
+│   │   └── CSR1000v_Multi_Interface_Writeup.md
 │   ├── overview.md
 │   └── phases.md
 ├── docker/
-│   └── Dockerfile               # Ansible control node
+│   └── Dockerfile                   # Ansible control node image
 ├── inventory/
-│   └── hosts.yml                # target hosts (no plain-text passwords)
+│   ├── hosts.yml                    # all target hosts
+│   └── group_vars/
+│       └── all/
+│           └── vault.yml            # auto-loaded encrypted vars
 ├── vars/
-│   └── vault.yml                # Ansible Vault encrypted credentials
+│   └── vault.yml                    # Ansible Vault encrypted credentials
 ├── templates/
-│   └── report.j2                # Jinja2 template for sysinfo report
+│   ├── report.j2                    # Jinja2 template — linux_host report
+│   └── device_report.j2             # Jinja2 template — per LAN device report
 ├── playbooks/
-│   ├── site.yml                 # master playbook — runs everything
-│   ├── net_identity.yml         # IP, user, banner
-│   ├── net_routing.yml          # interface desc, static route, device info
-│   ├── linux_facts.yml          # hostname, date/time, CPU, memory, disk
-│   └── linux_activity.yml       # logged-in users, top 5 processes + report
-├── reflections/                 # personal reflection reports
+│   ├── site.yml                     # master playbook — runs everything
+│   ├── net_identity.yml             # router: IP, user, banner
+│   ├── net_routing.yml              # router: descriptions, static route, device info
+│   ├── linux_facts.yml              # linux_host: hostname, CPU, memory, disk
+│   ├── linux_activity.yml           # linux_host: users, processes, report
+│   └── lan_devices.yml              # LAN devices: info collection + per-device reports
+├── reflections/                     # personal reflection PDFs
 └── README.md
 ```
 
@@ -132,7 +163,7 @@ git clone https://github.com/Mhdomer/nahj-net-automation.git
 cd nahj-net-automation
 ```
 
-### 2. Start the Linux target host
+### 2. Start the Linux monitoring host
 
 ```bash
 docker run -d \
@@ -143,25 +174,44 @@ docker run -d \
   -e USER_PASSWORD=group-nahj \
   -p 2222:2222 \
   lscr.io/linuxserver/openssh-server
+
+docker exec nahj-linux apk add python3
 ```
 
-### 3. Start the Cisco router
+### 3. Start the LAN end device containers
 
-Boot your Cisco CSR1000v in VMware Workstation. Once it's up, confirm SSH is reachable on port 22. Update `ansible_host` in `inventory/hosts.yml` to match your router's IP if it differs.
+```bash
+for name_port in "pc1:2223" "laptop1:2224" "server1:2225" "pc2:2226"; do
+  name="${name_port%%:*}"
+  port="${name_port##*:}"
+  docker run -d --name "$name" \
+    -e PUID=1000 -e PGID=1000 \
+    -e PASSWORD_ACCESS=true \
+    -e USER_NAME=nahj \
+    -e USER_PASSWORD=group-nahj \
+    -p "$port":2222 \
+    lscr.io/linuxserver/openssh-server
+  docker exec "$name" apk add python3
+done
+```
 
-### 4. Enter the Ansible control node
+### 4. Start the Cisco CSR1000v
+
+Boot the CSR1000v in VMware Workstation. Confirm it has 3 NICs assigned — VMnet1 (management), VMnet2 (LAN1), VMnet3 (LAN2). Update `ansible_host` in `inventory/hosts.yml` if your router IP differs from `192.168.229.129`.
+
+### 5. Enter the Ansible control node
 
 ```bash
 docker compose run --rm ansible bash
 ```
 
-### 5. Set up the Ansible Vault password
+### 6. Set up the Ansible Vault password
 
 ```bash
 echo "nahj" > /tmp/.vault_pass
 ```
 
-### 6. Run the full automation
+### 7. Run the full automation
 
 ```bash
 ansible-playbook -i inventory/hosts.yml playbooks/site.yml --vault-password-file /tmp/.vault_pass
@@ -171,38 +221,32 @@ Or run a specific playbook:
 
 ```bash
 ansible-playbook -i inventory/hosts.yml playbooks/net_identity.yml --vault-password-file /tmp/.vault_pass
-ansible-playbook -i inventory/hosts.yml playbooks/linux_facts.yml --vault-password-file /tmp/.vault_pass
+ansible-playbook -i inventory/hosts.yml playbooks/lan_devices.yml  --vault-password-file /tmp/.vault_pass
 ```
 
-The report is saved to `playbooks/report.md` after the Linux playbooks run.
+Reports are saved to `playbooks/report.md` and `playbooks/report_<device>.md`.
 
 ---
 
-## Git Workflow
+## Inventory Structure
 
 ```
-main  (protected — no direct pushes)
- ├── feature/setup             ← Omar
- ├── feature/net-identity      ← Moqbel
- ├── feature/net-routing       ← Ali
- ├── feature/linux-facts       ← Knan
- └── feature/linux-activity    ← Ahmed
+all
+├── routers        → cisco_router (CSR-Nahj · 192.168.229.129)
+├── linux          → linux_host   (Docker · port 2222)
+└── lan_devices    → pc1 (2223) · laptop1 (2224) · server1 (2225) · pc2 (2226)
 ```
-
-1. Work on your own branch
-2. Commit regularly — at least 3 commits across different days
-3. Open a Pull Request to `main`
 
 ---
 
 ## CI Pipeline
 
-Every Pull Request triggers a GitHub Actions workflow that runs `ansible-lint` on all playbooks. Fix any lint warnings before requesting a review.
+Every Pull Request triggers a GitHub Actions workflow that runs `ansible-lint` on all playbooks. All playbooks must pass lint before merging to `main`.
 
 ---
 
 ## Course Info
 
-**Course:** SECR3253 Network Programming  
-**University:** Universiti Teknologi Malaysia (UTM)  
+**Course:** SECR3253 Network Programming
+**University:** Universiti Teknologi Malaysia (UTM)
 **Semester:** 2025/2026-2
