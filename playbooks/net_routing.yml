@@ -6,22 +6,22 @@
     - ../vars/vault.yml
 
   tasks:
-    - name: Set description on Loopback0 (LAN1)
+    - name: Set description on GigabitEthernet2 (LAN1)
       cisco.ios.ios_config:
         lines:
           - description Nahj LAN1 - Managed by Ansible
-        parents: interface Loopback0
+        parents: interface GigabitEthernet2
 
-    - name: Set description on Loopback1 (LAN2)
+    - name: Set description on GigabitEthernet3 (LAN2)
       cisco.ios.ios_config:
         lines:
           - description Nahj LAN2 - Managed by Ansible
-        parents: interface Loopback1
+        parents: interface GigabitEthernet3
 
-    - name: Add static route from LAN1 to LAN2
+    - name: Add static route — LAN2 reachable via GigabitEthernet3
       cisco.ios.ios_config:
         lines:
-          - ip route 192.168.20.0 255.255.255.0 192.168.10.1
+          - ip route 192.168.20.0 255.255.255.0 GigabitEthernet3
           
     - name: Retrieve running configuration
       cisco.ios.ios_command:

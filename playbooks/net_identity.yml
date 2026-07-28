@@ -6,17 +6,19 @@
     - ../vars/vault.yml
 
   tasks:
-    - name: Configure IP address on Loopback0 (simulated LAN1)
+    - name: Configure GigabitEthernet2 — LAN1 (192.168.10.0/24)
       cisco.ios.ios_config:
         lines:
           - ip address 192.168.10.1 255.255.255.0
-        parents: interface Loopback0
+          - no shutdown
+        parents: interface GigabitEthernet2
 
-    - name: Configure IP address on Loopback1 (simulated LAN2)
+    - name: Configure GigabitEthernet3 — LAN2 (192.168.20.0/24)
       cisco.ios.ios_config:
         lines:
           - ip address 192.168.20.1 255.255.255.0
-        parents: interface Loopback1
+          - no shutdown
+        parents: interface GigabitEthernet3
 
     - name: Create local user account
       cisco.ios.ios_config:
